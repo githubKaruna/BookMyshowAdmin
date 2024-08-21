@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.neatroots.bookymyshowadmin" />
+                  <option name="mobileSdkAppId" value="1:821491631784:android:1e6db259e5b3423eb6249d" />
+                  <option name="projectId" value="book-my-show-84522" />
+                  <option name="projectNumber" value="821491631784" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

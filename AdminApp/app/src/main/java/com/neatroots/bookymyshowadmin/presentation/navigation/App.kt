@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import com.neatroots.bookymyshowadmin.presentation.screens.CategoryScreen
 import com.neatroots.bookymyshowadmin.presentation.screens.HomeScreen
 import com.neatroots.bookymyshowadmin.presentation.screens.SplashScreen
 
@@ -37,6 +38,9 @@ fun App() {
         {
             composable<Routes.Home> { 
                 HomeScreen(navController = navController)
+            }
+            composable<Routes.AddCategory> {
+                CategoryScreen(navController = navController)
             }
         }
     
