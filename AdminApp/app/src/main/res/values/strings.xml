@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Book My Show Admin</string>
+    <string name="payment_id">rzp_test_Nqy8gmPWtyPySL</string>
+    <string name="app_desp">Your Perfect Stay Awaits: Book Your Blissful Retreat Today!</string>
+    <string name="app_desp2">Your Ticket to Movie Magic: Book Smarter, Watch Happier!!</string>
+    <string name="sub_description">Best Movie Ticket booking application..</string>
+    <string name="open">open</string>
+    <string name="close">close</string>
+    <string name="password_recovery_msg">To ensure secure account recovery, we have sent a password reset link to your registered email address. Please check your inbox and follow the instructions to reset your password. If you don\'t receive the email, kindly check your spam folder or contact our support team for further assistance. Thank you.</string>
+    <string name="web_client_id">942404320552-cs773rt1dtogdjs5b6p1qj67n9tropga.apps.googleusercontent.com</string>
+    <string name="welcomeText">Log in to your account using Email, social account else create account</string>
+    <string name="bookingTitle">Book Movie Ticket!</string>
+    <string name="aboutUs">Welcome to Book My Show – where movie magic meets convenience! We are your go-to destination for seamless and stress-free movie ticket booking experiences. Our mission is to bring the joy of cinema right to your fingertips, offering a user-friendly platform that ensures you never miss out on the latest blockbuster or the most anticipated indie flick..(You can Edit this)</string>
+
+</resources>
