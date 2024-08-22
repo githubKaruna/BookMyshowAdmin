@@ -29,7 +29,7 @@ sealed class Routes {
     object AddCategory
 
     @Serializable
-    object Notification
+    object ManageNotificationScreen
 
     @Serializable
     object AddSlider

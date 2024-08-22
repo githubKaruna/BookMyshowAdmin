@@ -23,6 +23,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.neatroots.bookymyshowadmin.presentation.navigation.App
 import com.neatroots.bookymyshowadmin.presentation.screens.SplashScreen
 import com.neatroots.bookymyshowadmin.ui.theme.AdminAppTheme
@@ -31,7 +32,7 @@ import kotlinx.coroutines.delay
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        //enableEdgeToEdge()
         setContent {
             AdminAppTheme {
                 App()

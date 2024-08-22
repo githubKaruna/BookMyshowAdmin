@@ -10,6 +10,7 @@ import com.neatroots.bookymyshowadmin.presentation.screens.CategoryScreen
 import com.neatroots.bookymyshowadmin.presentation.screens.EditMovieScreen
 import com.neatroots.bookymyshowadmin.presentation.screens.HomeScreen
 import com.neatroots.bookymyshowadmin.presentation.screens.ManageAdminLoginScreen
+import com.neatroots.bookymyshowadmin.presentation.screens.ManageNotificationScreen
 import com.neatroots.bookymyshowadmin.presentation.screens.SplashScreen
 
 @Composable
@@ -49,6 +50,9 @@ fun App() {
             }
             composable<Routes.ManageAdminLogin> {
                 ManageAdminLoginScreen(navController = navController)
+            }
+            composable<Routes.ManageNotificationScreen> {
+                ManageNotificationScreen(navController = navController)
             }
         }
     

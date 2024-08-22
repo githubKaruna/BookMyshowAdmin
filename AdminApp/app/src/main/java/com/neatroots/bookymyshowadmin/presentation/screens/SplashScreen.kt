@@ -19,13 +19,17 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.compose.animation.core.*
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.graphics.isSpecified
 import androidx.navigation.NavController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.neatroots.bookymyshowadmin.R
 import com.neatroots.bookymyshowadmin.presentation.navigation.Routes
+import com.neatroots.bookymyshowadmin.ui.theme.c10
 import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(navController: NavController) {
+
     val transition = rememberInfiniteTransition()
     val animationSpec = tween<Float>(durationMillis = 1500)
 
@@ -34,7 +38,13 @@ fun SplashScreen(navController: NavController) {
         targetValue = 0f,
         animationSpec = infiniteRepeatable( animation = animationSpec)
     )
+    val systemUiController = rememberSystemUiController()
+    val useDarkIcons = MaterialTheme.colorScheme.primary.isSpecified // Adjust based on theme
+    val statusBarColor = c10 // Replace with your desired color
 
+    systemUiController.setSystemBarsColor(
+        color = statusBarColor,
+    )
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()

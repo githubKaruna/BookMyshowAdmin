@@ -169,7 +169,10 @@ fun TextInputField(
 fun GradientButton(
     text: String,
     textColor: Color,
-    gradient: Brush,
+    gradient: Brush= Brush.horizontalGradient(
+        0.0f to Color(0xFFC6426E),
+        1.0f to Color(0xFF642B73),
+    ),
     onClick: () -> Unit
 ) {
     Button(

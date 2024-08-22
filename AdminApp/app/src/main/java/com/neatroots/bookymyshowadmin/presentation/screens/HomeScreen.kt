@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -40,8 +41,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.neatroots.bookymyshowadmin.R
 import com.neatroots.bookymyshowadmin.presentation.navigation.Routes
+import com.neatroots.bookymyshowadmin.ui.theme.c10
 
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
@@ -105,10 +108,10 @@ fun HomeScreen(navController: NavHostController= rememberNavController()) {
         ) {
             HomeButton(text = "Create Category", onClick = { navController.navigate(Routes.AddCategory)})
             HomeButton(text = "Manage All Movies", onClick = { navController.navigate(Routes.EditMovie)})
-            HomeButton(text = "View All Bookings", onClick = { /* TODO */ })
-            HomeButton(text = "Create Slider Images", onClick = { /* TODO */ })
-            HomeButton(text = "Create Notifications", onClick = { /* TODO */ })
-            HomeButton(text = "Manage Login", onClick = { /* TODO */ })
+            HomeButton(text = "View All Bookings", onClick = { navController.navigate(Routes.ManageAdminLogin)})
+            HomeButton(text = "Create Slider Images", onClick = { navController.navigate(Routes.ManageAdminLogin)})
+            HomeButton(text = "Create Notifications", onClick ={ navController.navigate(Routes.ManageNotificationScreen)})
+            HomeButton(text = "Manage Login", onClick = { navController.navigate(Routes.ManageAdminLogin)})
         }
     }
 }
@@ -144,4 +147,6 @@ fun HomeButton(text: String, onClick: () -> Unit) {
             )
         }
     }
+
+
 }
