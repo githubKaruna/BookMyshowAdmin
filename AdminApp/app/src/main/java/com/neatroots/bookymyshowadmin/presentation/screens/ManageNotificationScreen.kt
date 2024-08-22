@@ -27,7 +27,7 @@ import com.neatroots.bookymyshowadmin.R
 fun ManageNotificationScreen(navController: NavHostController) {
     Scaffold(
         topBar = {
-            CommonHeader(title = "Manage Notifications")
+            CommonHeader(title = "Manage Notifications",navController)
         }
     ){innerPadding->
         NotificationContent(innerPadding)

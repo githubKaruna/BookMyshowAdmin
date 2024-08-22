@@ -52,7 +52,7 @@ import com.neatroots.bookymyshowadmin.ui.theme.lightGray
 
 @Preview(showSystemUi = true)
 @Composable
-fun EditMovieScreen(navController: NavController= rememberNavController()) {
+fun EditMovieScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -66,7 +66,7 @@ fun EditMovieScreen(navController: NavController= rememberNavController()) {
                 .background(color = c10),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { /* Handle back button click */ }) {
+            IconButton(onClick = { navController.popBackStack() }) {
                 Icon(
                     imageVector = Icons.Default.KeyboardArrowLeft,
                     contentDescription = "Back",
@@ -83,7 +83,7 @@ fun EditMovieScreen(navController: NavController= rememberNavController()) {
                     .padding(start = 16.dp)
             )
 
-            IconButton(onClick = { /* Handle delete button click */ }) {
+            IconButton(onClick = {  }) {
                 Icon(
                     imageVector = Icons.Outlined.Delete,
                     contentDescription = "Delete",

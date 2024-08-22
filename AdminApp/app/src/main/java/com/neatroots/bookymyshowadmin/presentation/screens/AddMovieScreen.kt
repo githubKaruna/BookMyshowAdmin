@@ -19,12 +19,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.neatroots.bookymyshowadmin.R
-import com.neatroots.bookymyshowadmin.presentation.navigation.Routes
 
 @Preview(showSystemUi = true)
 @Composable
-fun AddMovieScreen() {
+fun AddMovieScreen(navController: NavController) {
     Scaffold(
         topBar = {
             Column(
@@ -32,7 +32,7 @@ fun AddMovieScreen() {
                     .fillMaxWidth()
                     .background(Color.White)
             ) {
-                CommonHeader(title = "Add Movie")
+                CommonHeader(title = "Add Movie", navController = navController)
             }     }
     ) { padding ->
         Box(

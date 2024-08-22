@@ -56,7 +56,7 @@ import com.neatroots.bookymyshowadmin.presentation.navigation.Routes
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 //fun LoginScreen(navController: NavHostController){
-fun LoginScreen(navController: NavHostController= rememberNavController()) {
+fun LoginScreen(navController: NavHostController) {
 
     Scaffold() { paddingValues ->
         Box(

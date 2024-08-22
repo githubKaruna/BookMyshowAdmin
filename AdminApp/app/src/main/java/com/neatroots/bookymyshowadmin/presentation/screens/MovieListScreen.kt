@@ -2,35 +2,30 @@ package com.neatroots.bookymyshowadmin.presentation.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.neatroots.bookymyshowadmin.R
+import com.neatroots.bookymyshowadmin.presentation.navigation.Routes
 import com.neatroots.bookymyshowadmin.ui.theme.c10
 
 @Preview(showSystemUi = true)
 @Composable
-fun MovieListScreen() {
+fun MovieListScreen(navController: NavController= rememberNavController()) {
     Scaffold(
         topBar = {
             Column(
@@ -38,13 +33,13 @@ fun MovieListScreen() {
                     .fillMaxWidth()
                     .background(Color.White)
             ) {
-                CommonHeader(title = "All Movies")
+                CommonHeader(title = "All Movies", navController = navController)
             }
         },
         floatingActionButton = {
             FloatingActionButton(
                 containerColor = c10,
-                onClick = { /* Handle add product click */ },
+                onClick = { navController.navigate(Routes.AddMovie) },
             ) {
                 Icon(Icons.Default.Add, contentDescription = null, tint = Color.White)
             }
@@ -62,7 +57,7 @@ fun MovieListScreen() {
                     modifier = Modifier.fillMaxSize()
                 ) {
                     items(10) { // Replace 10 with your actual data source
-                        CategoryItem()
+                  MovieListItem(navController = navController)
                     }
                 }
 
@@ -82,11 +77,12 @@ fun MovieListScreen() {
 }
 
 @Composable
-fun CategoryItem() {
+fun CategoryItem(navController: NavController) {
     Card(
         modifier = Modifier
             .padding(8.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clickable { navController.navigate(Routes.EditMovie) },
         shape = MaterialTheme.shapes.small,
         elevation = CardDefaults.cardElevation()
     ) {
@@ -100,7 +96,7 @@ fun CategoryItem() {
                 contentScale = ContentScale.Crop
             )
             Text(
-                text = "Category Name",
+                text = "Movie Name",
                 style = MaterialTheme.typography.labelMedium,
                 modifier = Modifier.padding(8.dp)
             )

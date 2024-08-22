@@ -48,7 +48,7 @@ import com.neatroots.bookymyshowadmin.ui.theme.c10
 
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
-fun HomeScreen(navController: NavHostController= rememberNavController()) {
+fun HomeScreen(navController: NavHostController) {
 
     Scaffold(
 
@@ -107,9 +107,9 @@ fun HomeScreen(navController: NavHostController= rememberNavController()) {
                 .verticalScroll(rememberScrollState())
         ) {
             HomeButton(text = "Create Category", onClick = { navController.navigate(Routes.AddCategory)})
-            HomeButton(text = "Manage All Movies", onClick = { navController.navigate(Routes.EditMovie)})
+            HomeButton(text = "Manage All Movies", onClick = { navController.navigate(Routes.AllMovies)})
             HomeButton(text = "View All Bookings", onClick = { navController.navigate(Routes.ManageAdminLogin)})
-            HomeButton(text = "Create Slider Images", onClick = { navController.navigate(Routes.ManageAdminLogin)})
+            HomeButton(text = "Create Slider Images", onClick = { navController.navigate(Routes.AddSlider)})
             HomeButton(text = "Create Notifications", onClick ={ navController.navigate(Routes.ManageNotificationScreen)})
             HomeButton(text = "Manage Login", onClick = { navController.navigate(Routes.ManageAdminLogin)})
         }
