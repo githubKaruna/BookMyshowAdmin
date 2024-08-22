@@ -104,7 +104,7 @@ fun HomeScreen(navController: NavHostController= rememberNavController()) {
                 .verticalScroll(rememberScrollState())
         ) {
             HomeButton(text = "Create Category", onClick = { navController.navigate(Routes.AddCategory)})
-            HomeButton(text = "Manage All Movies", onClick = { /* TODO */ })
+            HomeButton(text = "Manage All Movies", onClick = { navController.navigate(Routes.EditMovie)})
             HomeButton(text = "View All Bookings", onClick = { /* TODO */ })
             HomeButton(text = "Create Slider Images", onClick = { /* TODO */ })
             HomeButton(text = "Create Notifications", onClick = { /* TODO */ })

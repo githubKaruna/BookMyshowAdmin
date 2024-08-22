@@ -49,6 +49,9 @@ sealed class Routes {
     @Serializable
     object ManageTicket
 
+    @Serializable
+    object ManageAdminLogin
+
 
 //2.login screen
 //3.register screen
