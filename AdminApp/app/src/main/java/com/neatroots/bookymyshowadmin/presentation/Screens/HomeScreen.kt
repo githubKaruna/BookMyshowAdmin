@@ -93,11 +93,15 @@ fun HomeScreen(navController: NavHostController) {
         }
     ) { innerPadding ->
         Column(
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(bottom = 16.dp)
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(rememberScrollState()
+                 )
+
         ) {
             HomeButton(text = "Create Category", onClick = { navController.navigate(Routes.AddCategory)})
             HomeButton(text = "Manage All Movies", onClick = { navController.navigate(Routes.AllMovies)})

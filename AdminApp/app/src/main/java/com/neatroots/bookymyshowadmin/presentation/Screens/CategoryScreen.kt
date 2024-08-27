@@ -3,6 +3,7 @@ package com.neatroots.bookymyshowadmin.presentation.Screens
               import android.content.Context
               import android.graphics.Bitmap
               import android.net.Uri
+              import android.util.Log
               import android.widget.Toast
               import androidx.activity.compose.rememberLauncherForActivityResult
               import androidx.activity.result.PickVisualMediaRequest
@@ -75,6 +76,10 @@ package com.neatroots.bookymyshowadmin.presentation.Screens
                   val context = LocalContext.current
                   val openDialog = remember { mutableStateOf(false) }
 
+                    LaunchedEffect(key1 = Unit) {
+                        viewModel.getAllCategories()
+
+                    }
 
                   val galleryLauncher = rememberLauncherForActivityResult(
                       contract = ActivityResultContracts.GetContent(),
@@ -273,15 +278,6 @@ package com.neatroots.bookymyshowadmin.presentation.Screens
                                   modifier = Modifier
                                       .fillMaxSize()
                               ) {
-                                  OutlinedTextField(
-                                      value = "", // You might want to add a state for this
-                                      onValueChange = { /* Implement search functionality */ },
-                                      modifier = Modifier
-                                          .fillMaxWidth()
-                                          .padding(8.dp),
-                                      placeholder = { Text("Search") },
-                                      leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) }
-                                  )
 
                                   when {
                                       getAllCategoryState.value.isLoading -> {
@@ -311,9 +307,8 @@ package com.neatroots.bookymyshowadmin.presentation.Screens
                                       else -> {
                                           LazyVerticalGrid(
                                               columns = GridCells.Fixed(2),
-                                              contentPadding = PaddingValues(16.dp),
-                                              horizontalArrangement = Arrangement.spacedBy(16.dp),
-                                              verticalArrangement = Arrangement.spacedBy(16.dp)
+                                              horizontalArrangement = Arrangement.spacedBy(10.dp),
+                                              verticalArrangement = Arrangement.spacedBy(10.dp)
                                           ) {
                                             items(categories){
                                                 category->
@@ -407,6 +402,7 @@ package com.neatroots.bookymyshowadmin.presentation.Screens
                           .fillMaxWidth()
                           .clip(RoundedCornerShape(8.dp))
                           .background(Color.White)
+                          .border(0.75.dp, Color.LightGray, RoundedCornerShape(8.dp))
                           .padding(8.dp)
                   ) {
 
@@ -418,17 +414,27 @@ package com.neatroots.bookymyshowadmin.presentation.Screens
                               shape = RoundedCornerShape(8.dp),
 
                               ) {
-                              AsyncImage(
-                                  model = category.imgUrl,
-                                  contentDescription = null,
-                                  modifier = Modifier
-                                      .fillMaxWidth()
-                                      .background(color = Color.White)
-                                      .height(200.dp)
-                                      .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)),
-                                  contentScale = ContentScale.Fit,
-                                  placeholder = painterResource(id = R.drawable.placeholder)
-                              )
+                              if(category.imgUrl.isNotBlank()) {
+                                  AsyncImage(
+                                      model = category.imgUrl,
+                                      contentDescription = null,
+                                      modifier = Modifier
+                                          .fillMaxWidth()
+                                          .background(color = Color.White)
+                                          .fillMaxHeight()
+                                          .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)),
+                                      contentScale = ContentScale.Crop,
+                                      placeholder = painterResource(id = R.drawable.placeholder)
+                                  )
+                              }else
+                              {
+                                  Image(
+                                      painter = painterResource(id = R.drawable.placeholder),
+                                      contentDescription = "Category Image",
+                                      contentScale = ContentScale.Crop,
+                                      modifier = Modifier.fillMaxSize()
+                                  )
+                              }
                           }
 
                           Text(
@@ -446,6 +452,7 @@ package com.neatroots.bookymyshowadmin.presentation.Screens
                           modifier = Modifier
                               .padding(end = 8.dp, top = 8.dp)
                               .align(Alignment.TopEnd)
+                              .size(40.dp)
                               .background(Color.White, shape = RoundedCornerShape(8.dp))
                               .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
                               // Replace with your drawable resource

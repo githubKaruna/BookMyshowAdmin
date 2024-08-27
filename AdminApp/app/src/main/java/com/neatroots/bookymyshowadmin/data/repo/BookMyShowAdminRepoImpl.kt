@@ -94,6 +94,7 @@ class BookMyShowAdminRepoImpl @Inject constructor(private val database: Firebase
                     val categories = snapshot.children.mapNotNull {
                         it.getValue(CategoryModel::class.java)
                     }
+                    Log.d("catlist", "CategoryScreen: "+categories.toString())
                     trySend(ResultState.Success(categories))
 
                 }
@@ -102,6 +103,10 @@ class BookMyShowAdminRepoImpl @Inject constructor(private val database: Firebase
                     trySend(ResultState.Error(error.message))
                 }
             })
+
+            awaitClose {
+                close()
+            }
 
         }
 }
