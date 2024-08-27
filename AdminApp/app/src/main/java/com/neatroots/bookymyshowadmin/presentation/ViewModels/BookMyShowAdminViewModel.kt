@@ -1,5 +1,6 @@
 package com.neatroots.bookymyshowadmin.presentation.ViewModels
 
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -9,6 +10,8 @@ import com.neatroots.bookymyshowadmin.common.ResultState
 import com.neatroots.bookymyshowadmin.domain.repo.BookMyShowAdminRepo
 import com.neatroots.bookymyshowadmin.model.CategoryModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -23,6 +26,11 @@ class BookMyShowAdminViewModel @Inject constructor(var bookMyShowAdminRepo: Book
 
     private val _uploadCategoryImageState  = mutableStateOf(UploadCategoryImageState())
     val uploadCategoryImageState : MutableState<UploadCategoryImageState> = _uploadCategoryImageState
+
+    private val _getAllCategoryState = MutableStateFlow(GetAllCategoryState())
+    val getAllCategoryState = _getAllCategoryState.asStateFlow()
+
+
 
 
 
@@ -46,9 +54,9 @@ class BookMyShowAdminViewModel @Inject constructor(var bookMyShowAdminRepo: Book
         }
 
     }
-    fun uploadCategoryImage(imageUri : Uri){
+    fun uploadCategoryImage(imageUri : Uri?=null,bitmap: Bitmap?=null){
         viewModelScope.launch {
-            bookMyShowAdminRepo.uploadCategoryImage(imageUri).collectLatest {
+            bookMyShowAdminRepo.uploadCategoryImage(imageUri,bitmap).collectLatest {
                 when(it){
                     is ResultState.Error -> {
                         _uploadCategoryImageState.value = _uploadCategoryImageState.value.copy(
@@ -74,7 +82,35 @@ class BookMyShowAdminViewModel @Inject constructor(var bookMyShowAdminRepo: Book
         }
     }
 
+    fun getAllCategories(){
+        viewModelScope.launch {
+            bookMyShowAdminRepo.getAllCategory().collect{
+                when(it){
+                    is ResultState.Loading -> {
+                        _getAllCategoryState.value = _getAllCategoryState.value.copy(
+                            isLoading = true
+                        )
+                    }
+                    is ResultState.Error -> {
+                        _getAllCategoryState.value = _getAllCategoryState.value.copy(
+                            isLoading = false,
+                            errorMessage = it.message
+                        )
+                    }
+                    is ResultState.Success ->{
+                        _getAllCategoryState.value = _getAllCategoryState.value.copy(
+                            isLoading = false,
+                            categories = it.data
+                        )
+                    }
+                }
+            }
+
+        }
+    }
 }
+
+
 
 data class CategoryState(
     val data:String="",
@@ -86,4 +122,11 @@ data class UploadCategoryImageState(
     var loading: Boolean = false,
     var success: String = "",
     var error: String = ""
+)
+
+data class GetAllCategoryState(
+    val isLoading: Boolean = false,
+    val errorMessage: String? = null,
+    val categories: List<CategoryModel?> = emptyList()
+
 )
