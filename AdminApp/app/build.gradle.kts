@@ -6,6 +6,9 @@ plugins {
     id("kotlin-parcelize")
     id("org.jetbrains.kotlin.plugin.compose") version "2.0.0"
     alias(libs.plugins.google.gms.google.services)
+    id("com.google.dagger.hilt.android")
+
+
 
 }
 
@@ -68,6 +71,7 @@ dependencies {
     implementation(libs.firebase.database)
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.auth)
+    implementation(libs.firebase.storage)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -78,11 +82,21 @@ dependencies {
     implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
     // Navigation
     implementation("androidx.navigation:navigation-compose:2.8.0-beta07")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
     // Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.30.1")
     implementation("androidx.compose.material:material-icons-extended-android:1.6.8")
 
+    //dependency injection
+    implementation("com.google.dagger:hilt-android:2.50")
+    kapt("com.google.dagger:hilt-android-compiler:2.50")
+
+    //serilization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
+
+    //image loading dependency
+    implementation("io.coil-kt:coil-compose:2.7.0")
 
 }

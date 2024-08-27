@@ -1,4 +1,4 @@
-package com.neatroots.bookymyshowadmin.presentation.navigation
+package com.neatroots.bookymyshowadmin.presentation.Navigation
 
 import kotlinx.serialization.Serializable
 
@@ -51,6 +51,9 @@ sealed class Routes {
 
     @Serializable
     object ManageAdminLogin
+
+    @Serializable
+    object BookingList
 
 
 //2.login screen

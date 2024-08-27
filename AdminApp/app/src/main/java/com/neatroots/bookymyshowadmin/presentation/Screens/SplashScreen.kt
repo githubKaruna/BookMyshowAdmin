@@ -1,4 +1,4 @@
-package com.neatroots.bookymyshowadmin.presentation.screens
+package com.neatroots.bookymyshowadmin.presentation.Screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -6,9 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -16,14 +14,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import androidx.compose.animation.core.*
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.graphics.isSpecified
 import androidx.navigation.NavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.neatroots.bookymyshowadmin.R
-import com.neatroots.bookymyshowadmin.presentation.navigation.Routes
+import com.neatroots.bookymyshowadmin.presentation.Navigation.Routes
 import com.neatroots.bookymyshowadmin.ui.theme.c10
 import kotlinx.coroutines.delay
 

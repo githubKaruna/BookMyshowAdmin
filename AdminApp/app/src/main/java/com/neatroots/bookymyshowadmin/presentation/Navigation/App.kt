@@ -1,4 +1,4 @@
-package com.neatroots.bookymyshowadmin.presentation.navigation
+package com.neatroots.bookymyshowadmin.presentation.Navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
@@ -6,16 +6,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.neatroots.bookymyshowadmin.presentation.screens.AddMovieScreen
-import com.neatroots.bookymyshowadmin.presentation.screens.CategoryScreen
-import com.neatroots.bookymyshowadmin.presentation.screens.EditMovieScreen
-import com.neatroots.bookymyshowadmin.presentation.screens.HomeScreen
-import com.neatroots.bookymyshowadmin.presentation.screens.ManageAdminLoginScreen
-import com.neatroots.bookymyshowadmin.presentation.screens.ManageNotificationScreen
-import com.neatroots.bookymyshowadmin.presentation.screens.MovieListScreen
-import com.neatroots.bookymyshowadmin.presentation.screens.SliderList
-import com.neatroots.bookymyshowadmin.presentation.screens.SliderScreen
-import com.neatroots.bookymyshowadmin.presentation.screens.SplashScreen
+import com.neatroots.bookymyshowadmin.presentation.Screens.AddMovieScreen
+import com.neatroots.bookymyshowadmin.presentation.Screens.BookingList
+import com.neatroots.bookymyshowadmin.presentation.Screens.CategoryScreen
+import com.neatroots.bookymyshowadmin.presentation.Screens.HomeScreen
+import com.neatroots.bookymyshowadmin.presentation.Screens.ManageAdminLoginScreen
+import com.neatroots.bookymyshowadmin.presentation.Screens.ManageNotificationScreen
+import com.neatroots.bookymyshowadmin.presentation.Screens.MovieListScreen
+import com.neatroots.bookymyshowadmin.presentation.Screens.SliderScreen
+import com.neatroots.bookymyshowadmin.presentation.Screens.SplashScreen
 
 @Composable
 fun App() {
@@ -52,8 +51,8 @@ fun App() {
             composable<Routes.AddMovie> {
                 AddMovieScreen(navController = navController)
             }
-            composable<Routes.EditMovie> {
-                EditMovieScreen(navController = navController)
+            composable<Routes.BookingList> {
+                BookingList(navController = navController)
             }
             composable<Routes.ManageAdminLogin> {
                 ManageAdminLoginScreen(navController = navController)
@@ -67,6 +66,7 @@ fun App() {
             composable<Routes.AddSlider> {
                 SliderScreen(navController = navController)
             }
+
         }
     
 

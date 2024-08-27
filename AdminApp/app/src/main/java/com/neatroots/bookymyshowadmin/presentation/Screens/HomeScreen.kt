@@ -1,4 +1,4 @@
-package com.neatroots.bookymyshowadmin.presentation.screens
+package com.neatroots.bookymyshowadmin.presentation.Screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -19,18 +19,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -40,11 +36,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.neatroots.bookymyshowadmin.R
-import com.neatroots.bookymyshowadmin.presentation.navigation.Routes
-import com.neatroots.bookymyshowadmin.ui.theme.c10
+import com.neatroots.bookymyshowadmin.presentation.Navigation.Routes
 
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
@@ -108,7 +101,7 @@ fun HomeScreen(navController: NavHostController) {
         ) {
             HomeButton(text = "Create Category", onClick = { navController.navigate(Routes.AddCategory)})
             HomeButton(text = "Manage All Movies", onClick = { navController.navigate(Routes.AllMovies)})
-            HomeButton(text = "View All Bookings", onClick = { navController.navigate(Routes.ManageAdminLogin)})
+            HomeButton(text = "View All Bookings", onClick = { navController.navigate(Routes.BookingList)})
             HomeButton(text = "Create Slider Images", onClick = { navController.navigate(Routes.AddSlider)})
             HomeButton(text = "Create Notifications", onClick ={ navController.navigate(Routes.ManageNotificationScreen)})
             HomeButton(text = "Manage Login", onClick = { navController.navigate(Routes.ManageAdminLogin)})

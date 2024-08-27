@@ -1,4 +1,4 @@
-package com.neatroots.bookymyshowadmin.presentation.screens
+package com.neatroots.bookymyshowadmin.presentation.Screens
 
 
 import androidx.compose.foundation.Image
