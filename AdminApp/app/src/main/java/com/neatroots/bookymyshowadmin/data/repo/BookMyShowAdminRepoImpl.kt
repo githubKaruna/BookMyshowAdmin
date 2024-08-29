@@ -12,6 +12,7 @@ import com.neatroots.bookymyshowadmin.utils.Constants
 import com.neatroots.bookymyshowadmin.common.ResultState
 import com.neatroots.bookymyshowadmin.domain.repo.BookMyShowAdminRepo
 import com.neatroots.bookymyshowadmin.model.CategoryModel
+import com.neatroots.bookymyshowadmin.model.MovieModel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -106,6 +107,54 @@ class BookMyShowAdminRepoImpl @Inject constructor(private val database: Firebase
 
             awaitClose {
                 close()
+            }
+
+        }
+
+    override suspend fun getAllMovies(): Flow<ResultState<List<MovieModel>>> =
+        callbackFlow {
+            trySend(ResultState.Loading)
+
+
+            database.reference.child(Constants.MOVIES_REF).addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val movies = snapshot.children.mapNotNull {
+                        it.getValue(MovieModel::class.java)
+                    }
+                    Log.d("movielist", "MovieScreen: "+movies.toString())
+                    trySend(ResultState.Success(movies))
+
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    trySend(ResultState.Error(error.message))
+                }
+            })
+
+            awaitClose {
+                close()
+            }
+
+        }
+
+    override suspend fun addMovie(movieModel: MovieModel): Flow<ResultState<String>> =
+        callbackFlow {
+            trySend(ResultState.Loading)
+            val movieId = database.reference.child(Constants.MOVIES_REF).push().key
+            movieModel.movieId = movieId.toString()
+            movieId?.let { id ->
+                movieModel.movieId = id
+                database.reference.child(Constants.CATEGORY_REF).child(id).setValue(movieId)
+                    .addOnSuccessListener {
+                        Log.d("TAG", "addmovie: " + movieModel)
+                        trySend(ResultState.Success(" movie Added"))
+                    }.addOnFailureListener {
+                        trySend(ResultState.Error(it.localizedMessage ?: "Something went wrong"))
+                    }
+                awaitClose() {
+                    close()
+
+                }
             }
 
         }

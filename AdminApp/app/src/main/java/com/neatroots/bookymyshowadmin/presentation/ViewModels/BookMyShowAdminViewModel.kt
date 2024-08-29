@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.neatroots.bookymyshowadmin.common.ResultState
 import com.neatroots.bookymyshowadmin.domain.repo.BookMyShowAdminRepo
 import com.neatroots.bookymyshowadmin.model.CategoryModel
+import com.neatroots.bookymyshowadmin.model.MovieModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,6 +30,9 @@ class BookMyShowAdminViewModel @Inject constructor(var bookMyShowAdminRepo: Book
 
     private val _getAllCategoryState = MutableStateFlow(GetAllCategoryState())
     val getAllCategoryState = _getAllCategoryState.asStateFlow()
+
+    private val _getAllMoviesState = MutableStateFlow(GetAllMoviesState())
+    val getAllMoviesState = _getAllMoviesState.asStateFlow()
 
 
 
@@ -108,7 +112,37 @@ class BookMyShowAdminViewModel @Inject constructor(var bookMyShowAdminRepo: Book
 
         }
     }
+
+
+    fun getAllMovies(){
+        viewModelScope.launch {
+            bookMyShowAdminRepo.getAllMovies().collect{
+                when(it){
+                    is ResultState.Loading -> {
+                        _getAllMoviesState.value = _getAllMoviesState.value.copy(
+                            isLoading = true
+                        )
+                    }
+                    is ResultState.Error -> {
+                        _getAllMoviesState.value = _getAllMoviesState.value.copy(
+                            isLoading = false,
+                            errorMessage = it.message
+                        )
+                    }
+                    is ResultState.Success ->{
+                        _getAllMoviesState.value = _getAllMoviesState.value.copy(
+                            isLoading = false,
+                            movies = it.data
+                        )
+                    }
+                }
+            }
+
+        }
+    }
 }
+
+
 
 
 
@@ -128,5 +162,12 @@ data class GetAllCategoryState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val categories: List<CategoryModel?> = emptyList()
+
+)
+
+data class GetAllMoviesState(
+    val isLoading: Boolean = false,
+    val errorMessage: String? = null,
+    val movies: List<MovieModel?> = emptyList()
 
 )

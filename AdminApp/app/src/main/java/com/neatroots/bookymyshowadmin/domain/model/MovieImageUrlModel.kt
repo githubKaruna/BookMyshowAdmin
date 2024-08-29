@@ -1,6 +1,6 @@
 package com.neatroots.bookymyshowadmin.model
 
-data class ProductImageUrlModel(
+data class MovieImageUrlModel(
     val imageId: String = "",
     val imageUrl: String = ""
 

@@ -6,8 +6,8 @@ import kotlinx.parcelize.RawValue
 
 
 @Parcelize
-data class ProductModel (
-    var productId: String = "",
+data class MovieModel (
+    var movieId: String = "",
     var coverImg: String = "",
     var title: String = "",
     var rating: String = "",
@@ -18,5 +18,5 @@ data class ProductModel (
     var language: String = "",
     var theater: String = "",
     @field:JvmField
-    var images: @RawValue ArrayList<ProductImageUrlModel> = ArrayList()
+    var images: @RawValue ArrayList<MovieImageUrlModel> = ArrayList()
 ): Parcelable

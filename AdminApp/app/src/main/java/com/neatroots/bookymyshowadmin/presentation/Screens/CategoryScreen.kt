@@ -100,6 +100,7 @@ package com.neatroots.bookymyshowadmin.presentation.Screens
                           bitmap = newImage // Assign the captured Bitmap to the state variable
                           viewModel.uploadCategoryImage(bitmap=bitmap)
                       }
+
                   )
                   when {
 
