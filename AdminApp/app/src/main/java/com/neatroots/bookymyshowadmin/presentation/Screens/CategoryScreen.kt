@@ -56,6 +56,7 @@ package com.neatroots.bookymyshowadmin.presentation.Screens
               import androidx.compose.ui.text.font.FontWeight
               import androidx.lifecycle.compose.collectAsStateWithLifecycle
               import coil.compose.AsyncImage
+              import java.io.ByteArrayOutputStream
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -98,7 +99,12 @@ package com.neatroots.bookymyshowadmin.presentation.Screens
                       contract = ActivityResultContracts.TakePicturePreview(),
                       onResult = { newImage ->
                           bitmap = newImage // Assign the captured Bitmap to the state variable
-                          viewModel.uploadCategoryImage(bitmap=bitmap)
+                          if (bitmap != null) {
+                              val baos = ByteArrayOutputStream()
+                              bitmap!!.compress(Bitmap.CompressFormat.JPEG, 10, baos)
+                              val data = baos.toByteArray()
+                              viewModel.uploadCategoryImage(data = data)
+                          }
                       }
 
                   )

@@ -10,8 +10,12 @@ import kotlinx.coroutines.flow.Flow
 interface BookMyShowAdminRepo {
 
     suspend fun addCategory(categoryModel: CategoryModel): Flow<ResultState<String>>
-    suspend fun uploadCategoryImage(imageUri: Uri?,bitmap: Bitmap?): Flow<ResultState<String>>
+    suspend fun uploadCategoryImage(imageUri: Uri?,data: ByteArray?): Flow<ResultState<String>>
     suspend fun getAllCategory(): Flow<ResultState<List<CategoryModel>>>
     suspend fun getAllMovies(): Flow<ResultState<List<MovieModel>>>
     suspend fun addMovie(movieModel: MovieModel): Flow<ResultState<String>>
+    suspend fun uploadMovieCover(imageUri: Uri?,data: ByteArray?): Flow<ResultState<String>>
+    suspend fun uploadMovieImages(imageUri: Uri?,data: ByteArray?): Flow<ResultState<String>>
+
+
 }

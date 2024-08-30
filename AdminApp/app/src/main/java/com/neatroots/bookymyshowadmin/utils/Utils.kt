@@ -6,11 +6,13 @@ import android.view.LayoutInflater
 import android.widget.Toast
 import com.neatroots.bookymyshowadmin.R
 
-class Utils {
+public class Utils {
 
 
+    companion object {
+        fun showMessage(context: Context, errorMessage: String) {
+            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
 
-    fun showMessage(context: Context, msg: String) {
-        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+        }
     }
 }

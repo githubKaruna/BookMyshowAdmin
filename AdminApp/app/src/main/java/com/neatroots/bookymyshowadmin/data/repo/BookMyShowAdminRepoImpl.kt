@@ -44,7 +44,7 @@ class BookMyShowAdminRepoImpl @Inject constructor(private val database: Firebase
 
     override suspend fun uploadCategoryImage(
         imageUri: Uri?,
-        bitmap: Bitmap?
+        data: ByteArray?
     ): Flow<ResultState<String>> = callbackFlow {
         trySend(ResultState.Loading)
         if (imageUri != null) {
@@ -62,27 +62,24 @@ class BookMyShowAdminRepoImpl @Inject constructor(private val database: Firebase
                 close()
             }
         }
-        if (bitmap != null) {
-            val baos = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 10, baos)
-            val data = baos.toByteArray()
 
-            // Upload the ByteArray to Firebase Storage
-            val uploadTask =
-                firebaseStorage.reference.child(Constants.CATEGORY_IMAGE_REF + "/${System.currentTimeMillis()}")
-                    .putBytes(data)
-            uploadTask.addOnSuccessListener { imageUrl ->
-                trySend(ResultState.Success(imageUrl.toString()))
-            }.addOnFailureListener { exception ->
-                // Handle unsuccessful uploads
-                trySend(ResultState.Error(exception?.localizedMessage.toString()))
-            }
-
+             if(data!=null) {
+                 // Upload the ByteArray to Firebase Storage
+                 val uploadTask =
+                     firebaseStorage.reference.child(Constants.CATEGORY_IMAGE_REF + "/${System.currentTimeMillis()}")
+                         .putBytes(data)
+                 uploadTask.addOnSuccessListener { imageUrl ->
+                     trySend(ResultState.Success(imageUrl.toString()))
+                 }.addOnFailureListener { exception ->
+                     // Handle unsuccessful uploads
+                     trySend(ResultState.Error(exception?.localizedMessage.toString()))
+                 }
+             }
             awaitClose {
                 close()
             }
 
-        }
+
     }
 
     override suspend fun getAllCategory(): Flow<ResultState<List<CategoryModel>>> =
@@ -144,7 +141,7 @@ class BookMyShowAdminRepoImpl @Inject constructor(private val database: Firebase
             movieModel.movieId = movieId.toString()
             movieId?.let { id ->
                 movieModel.movieId = id
-                database.reference.child(Constants.CATEGORY_REF).child(id).setValue(movieId)
+                database.reference.child(Constants.MOVIES_REF).child(id).setValue(movieModel)
                     .addOnSuccessListener {
                         Log.d("TAG", "addmovie: " + movieModel)
                         trySend(ResultState.Success(" movie Added"))
@@ -158,4 +155,87 @@ class BookMyShowAdminRepoImpl @Inject constructor(private val database: Firebase
             }
 
         }
+
+
+
+
+    override suspend fun uploadMovieImages(
+        imageUri: Uri?,
+        data: ByteArray?
+    ): Flow<ResultState<String>> = callbackFlow {
+        trySend(ResultState.Loading)
+        if (imageUri != null) {
+            firebaseStorage.reference.child(Constants.MOVIE_IMAGE_REF + "/${System.currentTimeMillis()}")
+                .putFile(imageUri ?: Uri.EMPTY).addOnCompleteListener {
+                    it.result.storage.downloadUrl.addOnSuccessListener { imageUrl ->
+                        trySend(ResultState.Success(imageUrl.toString()))
+                    }
+                    if (it.exception != null) {
+                        trySend(ResultState.Error(it.exception?.localizedMessage.toString()))
+                    }
+
+                }
+            awaitClose {
+                close()
+            }
+        }
+
+        if(data!=null) {
+            // Upload the ByteArray to Firebase Storage
+            val uploadTask =
+                firebaseStorage.reference.child(Constants.MOVIE_IMAGE_REF + "/${System.currentTimeMillis()}")
+                    .putBytes(data)
+            uploadTask.addOnSuccessListener { imageUrl ->
+                trySend(ResultState.Success(imageUrl.toString()))
+            }.addOnFailureListener { exception ->
+                // Handle unsuccessful uploads
+                trySend(ResultState.Error(exception?.localizedMessage.toString()))
+            }
+        }
+        awaitClose {
+            close()
+        }
+
+
+    }
+
+    override suspend fun uploadMovieCover(
+        imageUri: Uri?,
+        data: ByteArray?
+    ): Flow<ResultState<String>> = callbackFlow {
+        trySend(ResultState.Loading)
+        if (imageUri != null) {
+            firebaseStorage.reference.child(Constants.MOVIE_COVER_REF + "/${System.currentTimeMillis()}")
+                .putFile(imageUri ?: Uri.EMPTY).addOnCompleteListener {
+                    it.result.storage.downloadUrl.addOnSuccessListener { imageUrl ->
+                        trySend(ResultState.Success(imageUrl.toString()))
+                    }
+                    if (it.exception != null) {
+                        trySend(ResultState.Error(it.exception?.localizedMessage.toString()))
+                    }
+
+                }
+            awaitClose {
+                close()
+            }
+        }
+
+        if(data!=null) {
+            // Upload the ByteArray to Firebase Storage
+            val uploadTask =
+                firebaseStorage.reference.child(Constants.MOVIE_COVER_REF + "/${System.currentTimeMillis()}")
+                    .putBytes(data)
+            uploadTask.addOnSuccessListener { imageUrl ->
+                trySend(ResultState.Success(imageUrl.toString()))
+            }.addOnFailureListener { exception ->
+                // Handle unsuccessful uploads
+                trySend(ResultState.Error(exception?.localizedMessage.toString()))
+            }
+        }
+        awaitClose {
+            close()
+        }
+
+
+    }
 }

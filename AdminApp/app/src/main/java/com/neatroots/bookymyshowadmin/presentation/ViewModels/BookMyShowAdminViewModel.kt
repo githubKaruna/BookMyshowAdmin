@@ -1,6 +1,5 @@
 package com.neatroots.bookymyshowadmin.presentation.ViewModels
 
-import android.graphics.Bitmap
 import android.net.Uri
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -14,9 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.lang.Error
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,9 +31,15 @@ class BookMyShowAdminViewModel @Inject constructor(var bookMyShowAdminRepo: Book
     private val _getAllMoviesState = MutableStateFlow(GetAllMoviesState())
     val getAllMoviesState = _getAllMoviesState.asStateFlow()
 
+    private val _movieState = mutableStateOf(MovieState())
+    val moviesState = _movieState
+    val movieModel :MutableState<MovieModel> = mutableStateOf(MovieModel())
 
+    private val _uploadMovieCover  = mutableStateOf(MovieCoverState())
+    val uploadMovieCover : MutableState<MovieCoverState> = _uploadMovieCover
 
-
+    private val _uploadMovieImages  = mutableStateOf(MovieImagesState())
+    val uploadMovieImages : MutableState<MovieImagesState> = _uploadMovieImages
 
     fun addCategory()
     {
@@ -58,9 +61,9 @@ class BookMyShowAdminViewModel @Inject constructor(var bookMyShowAdminRepo: Book
         }
 
     }
-    fun uploadCategoryImage(imageUri : Uri?=null,bitmap: Bitmap?=null){
+    fun uploadCategoryImage(imageUri : Uri?=null,data: ByteArray?=null){
         viewModelScope.launch {
-            bookMyShowAdminRepo.uploadCategoryImage(imageUri,bitmap).collectLatest {
+            bookMyShowAdminRepo.uploadCategoryImage(imageUri,data).collectLatest {
                 when(it){
                     is ResultState.Error -> {
                         _uploadCategoryImageState.value = _uploadCategoryImageState.value.copy(
@@ -140,6 +143,97 @@ class BookMyShowAdminViewModel @Inject constructor(var bookMyShowAdminRepo: Book
 
         }
     }
+
+
+    fun uploadMovieCover(
+        imageUri: Uri? = null,
+        data: ByteArray? = null,
+        onCompleted: () -> Unit
+    ){
+        viewModelScope.launch {
+            bookMyShowAdminRepo.uploadMovieCover(imageUri,data).collectLatest {
+                when(it){
+                    is ResultState.Error -> {
+                        _uploadMovieCover.value = _uploadMovieCover.value.copy(
+                            isLoading = false,
+                            errorMessage = it.message
+
+                        )
+                        onCompleted()
+
+                    }
+                    is ResultState.Loading -> {
+                        _uploadMovieCover.value = _uploadMovieCover.value.copy(
+                            isLoading = true
+                        )
+
+                    }
+                    is ResultState.Success -> {
+                        _uploadMovieCover.value = _uploadMovieCover.value.copy(
+                            isLoading = false,
+                            success = it.data
+                        )
+                        movieModel.value.coverImg = it.data
+                        onCompleted()
+                    }
+                }
+            }
+        }
+    }
+
+
+    fun uploadMovieImages(imageUri:Uri?=null, data: ByteArray?=null, onCompleted: (url:String?, isError:Boolean?) -> Unit){
+
+        viewModelScope.launch {
+            bookMyShowAdminRepo.uploadMovieImages(imageUri,data).collectLatest {
+                when(it){
+                    is ResultState.Error -> {
+                        _uploadMovieImages.value = _uploadMovieImages.value.copy(
+                            isLoading = false,
+                            success = it.message
+                        )
+                        onCompleted(null,true)
+
+                    }
+                    is ResultState.Loading -> {
+                        _uploadMovieImages.value = _uploadMovieImages.value.copy(
+                            isLoading = true
+                        )
+
+                    }
+                    is ResultState.Success -> {
+                        _uploadMovieImages.value = _uploadMovieImages.value.copy(
+                            isLoading = false,
+                            success = it.data
+
+                        )
+                        onCompleted(it.data,false)
+                    }
+                }
+            }
+        }
+    }
+
+    fun addMovie()
+    {
+        viewModelScope.launch {
+            bookMyShowAdminRepo.addMovie(movieModel.value).collectLatest {
+                when (it) {
+                    is ResultState.Success -> {
+                        moviesState.value= MovieState(success = it.data, isLoading = false)
+                    }
+
+                    is ResultState.Error -> {
+                        moviesState.value = MovieState(success = it.message, isLoading = false)
+                    }
+
+                    ResultState.Loading -> moviesState.value =  MovieState(isLoading = true)
+                }
+            }
+
+        }
+
+    }
 }
 
 
@@ -170,4 +264,20 @@ data class GetAllMoviesState(
     val errorMessage: String? = null,
     val movies: List<MovieModel?> = emptyList()
 
+)
+data class MovieState(
+    val isLoading: Boolean=false,
+    val errorMessage: String?=null,
+    val success: String?=null
+)
+
+data class MovieCoverState(
+    val isLoading: Boolean=false,
+    val errorMessage: String?=null,
+    val success: String?=null
+)
+data class MovieImagesState(
+    val isLoading: Boolean=false,
+    val errorMessage: String?=null,
+    val success: String?=null
 )
