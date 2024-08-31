@@ -1,8 +1,8 @@
 package com.neatroots.bookymyshowadmin.model
 
 data class SliderModel(
-    val sliderId: String = "",
-    val imageUrl: String = "",
-    val launchUrl: String = "",
-    val timestamp: Long? = null
+    var sliderId: String? = "",
+    var imageUrl: String ?= "",
+    var launchUrl: String? = "",
+    var timestamp: Long? = null
 )

@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.neatroots.bookymyshowadmin.presentation.Screens.AddMovieScreen
-import com.neatroots.bookymyshowadmin.presentation.Screens.BookingList
+import com.neatroots.bookymyshowadmin.presentation.Screens.BookingScreen
 import com.neatroots.bookymyshowadmin.presentation.Screens.CategoryScreen
 import com.neatroots.bookymyshowadmin.presentation.Screens.HomeScreen
 import com.neatroots.bookymyshowadmin.presentation.Screens.ManageAdminLoginScreen
@@ -52,7 +52,7 @@ fun App() {
                 AddMovieScreen(navController = navController)
             }
             composable<Routes.BookingList> {
-                BookingList(navController = navController)
+                BookingScreen(navController = navController)
             }
             composable<Routes.ManageAdminLogin> {
                 ManageAdminLoginScreen(navController = navController)

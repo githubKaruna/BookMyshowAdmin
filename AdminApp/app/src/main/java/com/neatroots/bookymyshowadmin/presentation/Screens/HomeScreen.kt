@@ -118,7 +118,7 @@ fun HomeButton(text: String, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(80.dp)
+            .height(100.dp)
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .background(colorResource(id = R.color.c10), shape = RoundedCornerShape(10))
             .clickable(onClick = onClick),

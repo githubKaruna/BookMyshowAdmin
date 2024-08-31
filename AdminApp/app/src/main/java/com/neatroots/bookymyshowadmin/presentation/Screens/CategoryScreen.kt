@@ -64,13 +64,13 @@ package com.neatroots.bookymyshowadmin.presentation.Screens
               fun CategoryScreen(navController: NavController,viewModel: BookMyShowAdminViewModel = hiltViewModel()) {
 
 
-                  val categoryState = viewModel._categoryState.value
+                  val categoryState = viewModel._categoryState
                   val categoryName = remember { mutableStateOf("") }
                   var categoryImageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
                   var categoryImage by remember { mutableStateOf("") }
 
                   var categoryModel=viewModel.categoryModel
-                  val uploadImageState = viewModel.uploadCategoryImageState.value
+                  val uploadImageState = viewModel.uploadCategoryImageState
                   val getAllCategoryState = viewModel.getAllCategoryState.collectAsStateWithLifecycle()
                   val categories = getAllCategoryState.value.categories ?: emptyList()
 
@@ -110,15 +110,15 @@ package com.neatroots.bookymyshowadmin.presentation.Screens
                   )
                   when {
 
-                      categoryState.error.isNotBlank() -> {
-                          Toast.makeText(LocalContext.current, categoryState.error, Toast.LENGTH_SHORT).show()
+                      categoryState.value.error.isNotBlank() -> {
+                          Toast.makeText(LocalContext.current, categoryState.value.error, Toast.LENGTH_SHORT).show()
                       }
-                      uploadImageState.error.isNotBlank() -> {
-                          Toast.makeText(LocalContext.current, uploadImageState.error, Toast.LENGTH_SHORT).show()
+                      uploadImageState.value.error.isNotBlank() -> {
+                          Toast.makeText(LocalContext.current, uploadImageState.value.error, Toast.LENGTH_SHORT).show()
 
                       }
-                      categoryState.data.isNotBlank() -> {
-                          Toast.makeText(LocalContext.current, categoryState.data, Toast.LENGTH_SHORT).show()
+                      categoryState.value.data.isNotBlank() -> {
+                          Toast.makeText(LocalContext.current, categoryState.value.data, Toast.LENGTH_SHORT).show()
                           categoryName.value = ""
                           categoryImageUri = null
                           categoryImage = ""
@@ -126,11 +126,11 @@ package com.neatroots.bookymyshowadmin.presentation.Screens
 
 
                       }
-                      uploadImageState.success.isNotBlank() -> {
-                          categoryImage = uploadImageState.success
-                          uploadImageState.success = ""
-                          uploadImageState.error=""
-                          uploadImageState.loading=false
+                      uploadImageState.value.success.isNotBlank() -> {
+                          categoryImage = uploadImageState.value.success
+                          uploadImageState.value.success = ""
+                          uploadImageState.value.error=""
+                          uploadImageState.value.loading=false
 
                       }
                   }
@@ -200,6 +200,7 @@ package com.neatroots.bookymyshowadmin.presentation.Screens
                               .fillMaxWidth()
                               .background(Color.White)
                       ) {
+                          CommonHeader("Create Category", navController)
 
                           Column(
                               modifier = Modifier
@@ -337,7 +338,7 @@ package com.neatroots.bookymyshowadmin.presentation.Screens
                       }
 
                       // CircularProgressIndicator in the center of the Box
-                      if (categoryState.isLoading || uploadImageState.loading) {
+                      if (categoryState.value.isLoading || uploadImageState.value.loading) {
                           CircularProgressIndicator(
                               modifier = Modifier.align(Alignment.Center)
 

@@ -1,6 +1,5 @@
 package com.neatroots.bookymyshowadmin.data.repo
 
-import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import com.google.firebase.database.DataSnapshot
@@ -11,12 +10,13 @@ import com.google.firebase.storage.FirebaseStorage
 import com.neatroots.bookymyshowadmin.utils.Constants
 import com.neatroots.bookymyshowadmin.common.ResultState
 import com.neatroots.bookymyshowadmin.domain.repo.BookMyShowAdminRepo
+import com.neatroots.bookymyshowadmin.model.BookingModel
 import com.neatroots.bookymyshowadmin.model.CategoryModel
 import com.neatroots.bookymyshowadmin.model.MovieModel
+import com.neatroots.bookymyshowadmin.model.SliderModel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 
 class BookMyShowAdminRepoImpl @Inject constructor(private val database: FirebaseDatabase,private val firebaseStorage: FirebaseStorage) : BookMyShowAdminRepo {
@@ -48,7 +48,7 @@ class BookMyShowAdminRepoImpl @Inject constructor(private val database: Firebase
     ): Flow<ResultState<String>> = callbackFlow {
         trySend(ResultState.Loading)
         if (imageUri != null) {
-            firebaseStorage.reference.child(Constants.CATEGORY_IMAGE_REF + "/${System.currentTimeMillis()}")
+            firebaseStorage.reference.child(Constants.CATEGORY_IMAGE_REF + "/${Constants.CATEGORY_IMAGE_REF+System.currentTimeMillis()}")
                 .putFile(imageUri ?: Uri.EMPTY).addOnCompleteListener {
                     it.result.storage.downloadUrl.addOnSuccessListener { imageUrl ->
                         trySend(ResultState.Success(imageUrl.toString()))
@@ -66,7 +66,7 @@ class BookMyShowAdminRepoImpl @Inject constructor(private val database: Firebase
              if(data!=null) {
                  // Upload the ByteArray to Firebase Storage
                  val uploadTask =
-                     firebaseStorage.reference.child(Constants.CATEGORY_IMAGE_REF + "/${System.currentTimeMillis()}")
+                     firebaseStorage.reference.child(Constants.CATEGORY_IMAGE_REF + "/${Constants.CATEGORY_IMAGE_REF+System.currentTimeMillis()}")
                          .putBytes(data)
                  uploadTask.addOnSuccessListener { imageUrl ->
                      trySend(ResultState.Success(imageUrl.toString()))
@@ -165,7 +165,7 @@ class BookMyShowAdminRepoImpl @Inject constructor(private val database: Firebase
     ): Flow<ResultState<String>> = callbackFlow {
         trySend(ResultState.Loading)
         if (imageUri != null) {
-            firebaseStorage.reference.child(Constants.MOVIE_IMAGE_REF + "/${System.currentTimeMillis()}")
+            firebaseStorage.reference.child(Constants.MOVIE_IMAGE_REF + "/${Constants.MOVIE_IMAGE_REF+System.currentTimeMillis()}")
                 .putFile(imageUri ?: Uri.EMPTY).addOnCompleteListener {
                     it.result.storage.downloadUrl.addOnSuccessListener { imageUrl ->
                         trySend(ResultState.Success(imageUrl.toString()))
@@ -183,10 +183,10 @@ class BookMyShowAdminRepoImpl @Inject constructor(private val database: Firebase
         if(data!=null) {
             // Upload the ByteArray to Firebase Storage
             val uploadTask =
-                firebaseStorage.reference.child(Constants.MOVIE_IMAGE_REF + "/${System.currentTimeMillis()}")
+                firebaseStorage.reference.child(Constants.MOVIE_IMAGE_REF + "/${Constants.MOVIE_IMAGE_REF+System.currentTimeMillis()}")
                     .putBytes(data)
             uploadTask.addOnSuccessListener { imageUrl ->
-                trySend(ResultState.Success(imageUrl.toString()))
+                trySend(ResultState.Success(imageUrl.uploadSessionUri.toString()))
             }.addOnFailureListener { exception ->
                 // Handle unsuccessful uploads
                 trySend(ResultState.Error(exception?.localizedMessage.toString()))
@@ -205,7 +205,7 @@ class BookMyShowAdminRepoImpl @Inject constructor(private val database: Firebase
     ): Flow<ResultState<String>> = callbackFlow {
         trySend(ResultState.Loading)
         if (imageUri != null) {
-            firebaseStorage.reference.child(Constants.MOVIE_COVER_REF + "/${System.currentTimeMillis()}")
+            firebaseStorage.reference.child(Constants.MOVIE_COVER_REF + "/${Constants.MOVIE_COVER_REF+System.currentTimeMillis()}")
                 .putFile(imageUri ?: Uri.EMPTY).addOnCompleteListener {
                     it.result.storage.downloadUrl.addOnSuccessListener { imageUrl ->
                         trySend(ResultState.Success(imageUrl.toString()))
@@ -223,19 +223,127 @@ class BookMyShowAdminRepoImpl @Inject constructor(private val database: Firebase
         if(data!=null) {
             // Upload the ByteArray to Firebase Storage
             val uploadTask =
-                firebaseStorage.reference.child(Constants.MOVIE_COVER_REF + "/${System.currentTimeMillis()}")
-                    .putBytes(data)
-            uploadTask.addOnSuccessListener { imageUrl ->
-                trySend(ResultState.Success(imageUrl.toString()))
-            }.addOnFailureListener { exception ->
-                // Handle unsuccessful uploads
-                trySend(ResultState.Error(exception?.localizedMessage.toString()))
+                firebaseStorage.reference.child(Constants.MOVIE_COVER_REF + "/${Constants.MOVIE_COVER_REF+System.currentTimeMillis()}")
+                    .putBytes(data).addOnCompleteListener {
+                        it.result.storage.downloadUrl.addOnSuccessListener { imageUrl ->
+                            trySend(ResultState.Success(imageUrl.toString()))
+                        }
+                        if (it.exception != null) {
+                            trySend(ResultState.Error(it.exception?.localizedMessage.toString()))
+                        }
+                        }
+                    }
+                awaitClose {
+                    close()
+                }
+        }
+
+
+    override suspend fun getAllBooking(): Flow<ResultState<List<BookingModel>>> =
+        callbackFlow {
+            trySend(ResultState.Loading)
+
+
+            database.reference.child(Constants.BOOKING_REF).addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val bookings = snapshot.children.mapNotNull {
+                        it.getValue(BookingModel::class.java)
+                    }
+                    Log.d("booking", "bokkinglist: "+bookings.toString())
+                    trySend(ResultState.Success(bookings))
+
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    trySend(ResultState.Error(error.message))
+                }
+            })
+
+            awaitClose {
+                close()
             }
+
+        }
+
+    override suspend fun uploadImage( imageUri: Uri?, data: ByteArray?,type:String): Flow<ResultState<String>> = callbackFlow {
+        trySend(ResultState.Loading)
+        if (imageUri != null) {
+            firebaseStorage.reference.child(type + "/${type+System.currentTimeMillis()}")
+                .putFile(imageUri ?: Uri.EMPTY).addOnCompleteListener {
+                    it.result.storage.downloadUrl.addOnSuccessListener { imageUrl ->
+                        trySend(ResultState.Success(imageUrl.toString()))
+                    }
+                    if (it.exception != null) {
+                        trySend(ResultState.Error(it.exception?.localizedMessage.toString()))
+                    }
+
+                }
+            awaitClose {
+                close()
+            }
+        }
+
+        if(data!=null) {
+            // Upload the ByteArray to Firebase Storage
+            val uploadTask =
+                firebaseStorage.reference.child(type + "/${type+System.currentTimeMillis()}")
+                    .putBytes(data).addOnCompleteListener {
+                        it.result.storage.downloadUrl.addOnSuccessListener { imageUrl ->
+                            trySend(ResultState.Success(imageUrl.toString()))
+                        }
+                        if (it.exception != null) {
+                            trySend(ResultState.Error(it.exception?.localizedMessage.toString()))
+                        }
+                    }
         }
         awaitClose {
             close()
         }
-
-
     }
-}
+
+    override fun createSlider(note: String, sliderImgUrl: String):Flow<ResultState<String>> =
+        callbackFlow{
+        trySend(ResultState.Loading)
+        val reference = database.reference.child(Constants.SLIDER_DOCUMENT)
+        val sliderId = reference.push().key
+        val timestamp = System.currentTimeMillis()
+
+        val slider = SliderModel(sliderId!!, sliderImgUrl, note, timestamp)
+        reference.child(sliderId).setValue(slider).addOnSuccessListener {
+            trySend(ResultState.Success("Slider created"))
+        }.addOnFailureListener {
+            trySend(ResultState.Error(it.localizedMessage ?: "Something went wrong"))
+
+        }
+
+         awaitClose(){
+             close()
+         }
+    }
+
+    override suspend fun getAllSliders(): Flow<ResultState<List<SliderModel>>> =
+        callbackFlow {
+            trySend(ResultState.Loading)
+
+
+            database.reference.child(Constants.SLIDER_DOCUMENT)
+                .addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val sliders = snapshot.children.mapNotNull {
+                            it.getValue(SliderModel::class.java)
+                        }
+                        Log.d("sliders", "sliderList: " + sliders.toString())
+                        trySend(ResultState.Success(sliders))
+
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        trySend(ResultState.Error(error.message))
+                    }
+                })
+
+            awaitClose {
+                close()
+            }
+        }
+    }

@@ -17,13 +17,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.neatroots.bookymyshowadmin.R
+import com.neatroots.bookymyshowadmin.model.BookingModel
 import com.neatroots.bookymyshowadmin.ui.theme.c10
 import com.neatroots.bookymyshowadmin.ui.theme.tvHeading
 import com.neatroots.bookymyshowadmin.ui.theme.tvSmall
 
 @Preview(showSystemUi = true)
 @Composable
-fun BookingListItem() {
+fun BookingListItem(booking: BookingModel?) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -63,14 +64,14 @@ fun BookingListItem() {
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
-                BookingDetailRow(label = "Movie:", value = "Movie Name")
-                BookingDetailRow(label = "Mobile:", value = "********90")
-                BookingDetailRow(label = "Email:", value = "dummy@gmail.com")
-                BookingDetailRow(label = "Slot:", value = "09:10 AM IMAX")
-                BookingDetailRow(label = "Date:", value = "This Event Booked on")
+                BookingDetailRow(label = "Movie:", value = booking?.name ?: "Movie Name")
+                BookingDetailRow(label = "Mobile:", value = booking?.phoneNumber ?: "Mobile Number")
+                BookingDetailRow(label = "Email:", value = booking?.email?:"Email")
+                BookingDetailRow(label = "Slot:", value = booking?.timeSlot?:"Slot")
+                BookingDetailRow(label = "Date:", value = booking?.date?:"Booking Date")
 
                 Text(
-                    text = "This slot is booked on 5:40 PM on 4/11/2023",
+                    text = "This slot is booked on ${booking?.timestamp}",
                     style = tvSmall
                     ,
                     color = Color.Gray,
@@ -82,14 +83,14 @@ fun BookingListItem() {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "$ 00.0",
+                        text = "${booking?.price}",
                         style = tvHeading,
                         color = c10,
                         fontFamily = FontFamily(Font(R.font.autour_one)),
                         modifier = Modifier
                     )
                     Text(
-                        text = "11.0",
+                        text = "${booking?.noOfTickets} Tickets",
                         style = tvSmall,
                         fontFamily = FontFamily(Font(R.font.calistoga)),
                         color = c10,
@@ -97,7 +98,7 @@ fun BookingListItem() {
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
                 }
-                GradientButton(text = "Cancel", textColor = Color.White) {
+                GradientButton(text = booking?.status?:"Status", textColor = Color.White) {
                     
                 }
 

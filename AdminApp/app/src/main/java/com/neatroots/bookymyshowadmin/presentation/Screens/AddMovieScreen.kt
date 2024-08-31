@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -589,7 +590,8 @@ fun AddMovieScreen(navController: NavController,viewModel: BookMyShowAdminViewMo
                         }
                             viewModel.uploadMovieCover(data = data, imageUri = movieImageUri, onCompleted = {
                                 if (uploadMovieCoverState.value.success != null) {
-                                    var index = 1
+
+                                    var index = 0
                                   //  movieModel.value.coverImg = uploadMovieCoverState.value.success
 
                                     fun uploadImages(): Unit {
@@ -646,6 +648,9 @@ fun AddMovieScreen(navController: NavController,viewModel: BookMyShowAdminViewMo
                         CircularProgressIndicator()
                     }
                 }
+                moviesState.value.success != null -> {
+                    Utils.showMessage(context,moviesState.value.success!!)
+                }
             }
 
 
@@ -699,19 +704,24 @@ fun MoviesliderImages(
             }
 
             // Delete Button
-            Icon(
-                imageVector = Icons.Outlined.Delete,
-                contentDescription = "Delete",
+
+
+            IconButton(
+                onClick = {  },
                 modifier = Modifier
-                    .size(100.dp)
+                    .size(40.dp)
                     .align(Alignment.TopEnd)
                     .padding(16.dp)
-                    .background(Color.Blue)
                     .clip(RoundedCornerShape(50))
-                    .padding(10.dp)
-                    .clickable { onDeleteClick(imageUriModel) },
-                tint = Color.LightGray
-            )
+                    .background(Color.White)
+                    .size(40.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Delete,
+                    contentDescription = "Delete",
+                    tint = Color.LightGray
+                )
+            }
 
         }
     }

@@ -14,5 +14,7 @@ data class BookingModel(
     val date: String = "",
     val timeSlot: String = "",
     val timestamp: String = "",
-    val status: String = ""
+    val status: String = "",
+    val noOfTickets: String = ""
+
 )
