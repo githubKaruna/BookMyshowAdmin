@@ -9,7 +9,9 @@ import com.neatroots.bookymyshowadmin.common.ResultState
 import com.neatroots.bookymyshowadmin.domain.repo.BookMyShowAdminRepo
 import com.neatroots.bookymyshowadmin.model.BookingModel
 import com.neatroots.bookymyshowadmin.model.CategoryModel
+import com.neatroots.bookymyshowadmin.model.LoginModel
 import com.neatroots.bookymyshowadmin.model.MovieModel
+import com.neatroots.bookymyshowadmin.model.NotificationModel
 import com.neatroots.bookymyshowadmin.model.SliderModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -57,6 +59,16 @@ class BookMyShowAdminViewModel @Inject constructor(var bookMyShowAdminRepo: Book
     private val _getSliderState  = MutableStateFlow(GetSliderState())
     val getSliderState = _getSliderState.asStateFlow()
 
+    private val _addNotificationState  = mutableStateOf(AddNotificationState())
+    val addNotificationstate = _addNotificationState
+    private val _getNotificationListState  = MutableStateFlow(GetNotificationListState())
+    val getNotificationListState = _getNotificationListState.asStateFlow()
+
+    private val _checkLoginstate  = mutableStateOf(CheckLoginstate())
+    val checkLoginstate = _checkLoginstate
+
+    private val _adminRegistrationState  = mutableStateOf(AdminRegistrationState())
+    val adminRegistrationState = _adminRegistrationState
 
     fun addCategory()
     {
@@ -358,8 +370,101 @@ class BookMyShowAdminViewModel @Inject constructor(var bookMyShowAdminRepo: Book
 
         }
     }
-}
 
+    fun getNotificationList(){
+        viewModelScope.launch {
+            bookMyShowAdminRepo.getAllNotificationList().collect{
+                when(it){
+                    is ResultState.Loading -> {
+                        _getNotificationListState.value = _getNotificationListState.value.copy(
+                            isLoading = true
+                        )
+                    }
+                    is ResultState.Error -> {
+                        _getNotificationListState.value = _getNotificationListState.value.copy(
+                            isLoading = false,
+                            errorMessage = it.message
+                        )
+                    }
+                    is ResultState.Success ->{
+                        _getNotificationListState.value = _getNotificationListState.value.copy(
+                            isLoading = false,
+                            notification = it.data
+                        )
+                    }
+                }
+            }
+
+        }
+    }
+    fun createNotification(notificationModel: NotificationModel)
+    {
+        viewModelScope.launch {
+            bookMyShowAdminRepo.addNotification(notificationModel).collectLatest {
+                when (it) {
+                    is ResultState.Success -> {
+                        addNotificationstate.value = AddNotificationState(success = it.data, isLoading = false)
+                    }
+
+                    is ResultState.Error -> {
+                        addNotificationstate.value = AddNotificationState(errorMessage = it.message, isLoading = false)
+                    }
+
+                    ResultState.Loading -> addNotificationstate.value =  AddNotificationState(isLoading = true)
+                }
+            }
+
+        }
+
+    }
+
+    fun checkLoginRegistration()
+    {
+        viewModelScope.launch {
+            bookMyShowAdminRepo.checkLoginRegister().collectLatest {
+                when (it) {
+                    is ResultState.Success -> {
+                        checkLoginstate.value = CheckLoginstate(success = it.data, isLoading = false)
+                    }
+
+                    is ResultState.Error -> {
+                        checkLoginstate.value = CheckLoginstate(errorMessage = it.message, isLoading = false)
+                    }
+
+                    ResultState.Loading -> checkLoginstate.value =  CheckLoginstate(isLoading = true)
+                }
+            }
+
+        }
+
+    }
+    fun adminRegistration(loginModel: LoginModel){
+        viewModelScope.launch {
+            bookMyShowAdminRepo.adminRegistration(loginModel =loginModel ).collect{
+                when(it){
+                    is ResultState.Loading -> {
+                        _adminRegistrationState.value = _adminRegistrationState.value.copy(
+                            isLoading = true
+                        )
+                    }
+                    is ResultState.Error -> {
+                        _adminRegistrationState.value = _adminRegistrationState.value.copy(
+                            isLoading = false,
+                            errorMessage = it.message
+                        )
+                    }
+                    is ResultState.Success ->{
+                        _adminRegistrationState.value = _adminRegistrationState.value.copy(
+                            isLoading = false,
+                            success = it.data
+                        )
+                    }
+                }
+            }
+
+        }
+    }
+}
 
 
 
@@ -426,4 +531,26 @@ data class GetSliderState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val sliders: List<SliderModel?> = emptyList()
+)
+data class AddNotificationState (
+    val isLoading: Boolean=false,
+    val errorMessage: String?=null,
+    val success: String?=null
+)
+data class GetNotificationListState(
+    val isLoading: Boolean = false,
+    val errorMessage: String? = null,
+    val notification: List<NotificationModel?> = emptyList()
+)
+data class CheckLoginstate(
+    val isLoading: Boolean=false,
+    val errorMessage: String?=null,
+    val success: LoginModel?=null
+
+)
+
+data class AdminRegistrationState(
+    val isLoading: Boolean=false,
+    val errorMessage: String?=null,
+    val success: String?=null
 )

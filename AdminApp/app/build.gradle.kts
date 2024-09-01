@@ -98,5 +98,7 @@ dependencies {
 
     //image loading dependency
     implementation("io.coil-kt:coil-compose:2.7.0")
+    implementation ("com.google.code.gson:gson:2.10.1")
+
 
 }

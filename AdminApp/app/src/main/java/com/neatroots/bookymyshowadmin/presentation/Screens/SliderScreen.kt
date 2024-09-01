@@ -51,11 +51,8 @@ import java.io.ByteArrayOutputStream
 fun SliderScreen(navController: NavController=rememberNavController(),viewModel: BookMyShowAdminViewModel = hiltViewModel()) {
     var text by remember { mutableStateOf("") }
     val sliderState = viewModel.addSliderState
-    val notes = remember { mutableStateOf("") }
     var sliderImageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
-    var sliderImage by remember { mutableStateOf("") }
 
-    var sliderModel=viewModel.sliderModel
     val uploadImageState = viewModel.uploadImageState
     val getSliderState = viewModel.getSliderState.collectAsStateWithLifecycle()
     val sliderList = getSliderState.value.sliders ?: emptyList()

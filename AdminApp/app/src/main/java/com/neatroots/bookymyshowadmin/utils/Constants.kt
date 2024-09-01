@@ -1,6 +1,7 @@
 package com.neatroots.bookymyshowadmin.utils
 
 object Constants {
+   const val NO_DATA_FOUND: String = "No data found"
    val MOVIE_IMAGE_REF: String="Movie Service Images"
    val MOVIE_COVER_REF: String="Movie Cover Images"
 

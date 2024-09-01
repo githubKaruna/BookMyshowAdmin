@@ -2,6 +2,7 @@ package com.neatroots.bookymyshowadmin.data.repo
 
 import android.net.Uri
 import android.util.Log
+import androidx.compose.ui.platform.LocalContext
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -12,8 +13,12 @@ import com.neatroots.bookymyshowadmin.common.ResultState
 import com.neatroots.bookymyshowadmin.domain.repo.BookMyShowAdminRepo
 import com.neatroots.bookymyshowadmin.model.BookingModel
 import com.neatroots.bookymyshowadmin.model.CategoryModel
+import com.neatroots.bookymyshowadmin.model.LoginModel
 import com.neatroots.bookymyshowadmin.model.MovieModel
+import com.neatroots.bookymyshowadmin.model.NotificationModel
 import com.neatroots.bookymyshowadmin.model.SliderModel
+import com.neatroots.bookymyshowadmin.utils.SharedPref
+import com.neatroots.bookymyshowadmin.utils.Utils
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -39,6 +44,44 @@ class BookMyShowAdminRepoImpl @Inject constructor(private val database: Firebase
 
                 }
             }
+
+        }
+
+    override suspend fun checkLoginRegister(): Flow<ResultState<LoginModel>> =
+        callbackFlow {
+           database.reference.child(Constants.LOGIN_REF).addValueEventListener(object : ValueEventListener {
+               override fun onDataChange(snapshot: DataSnapshot) {
+                   if(snapshot.exists()) {
+                       val loginModel : LoginModel = (snapshot.getValue(LoginModel::class.java) as LoginModel?)!!
+                       trySend(ResultState.Success(loginModel))
+                   }
+                   else
+                       trySend(ResultState.Error(Constants.NO_DATA_FOUND))
+
+           }
+
+               override fun onCancelled(error: DatabaseError) {
+                   trySend(ResultState.Error(Constants.NO_DATA_FOUND))
+               }
+           })
+        }
+
+
+    override suspend fun adminRegistration(loginModel: LoginModel): Flow<ResultState<String>> =
+        callbackFlow {
+            trySend(ResultState.Loading)
+           // val loginId = database.reference.child(Constants.CATEGORY_REF).push().key
+            loginModel.id = Constants.LOGIN_REF
+            database.reference.child(Constants.LOGIN_REF).setValue(loginModel).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    trySend(ResultState.Success(" Added"))
+                    Log.d("TAG", "adminRegistration: "+task.result.toString())
+                } else {
+                    trySend(ResultState.Error(task.exception?.localizedMessage ?: "Something went wrong"))
+                }
+            }
+
+
 
         }
 
@@ -301,7 +344,7 @@ class BookMyShowAdminRepoImpl @Inject constructor(private val database: Firebase
         }
     }
 
-    override fun createSlider(note: String, sliderImgUrl: String):Flow<ResultState<String>> =
+    override suspend fun createSlider(note: String, sliderImgUrl: String):Flow<ResultState<String>> =
         callbackFlow{
         trySend(ResultState.Loading)
         val reference = database.reference.child(Constants.SLIDER_DOCUMENT)
@@ -346,4 +389,55 @@ class BookMyShowAdminRepoImpl @Inject constructor(private val database: Firebase
                 close()
             }
         }
-    }
+
+    override suspend fun getAllNotificationList(): Flow<ResultState<List<NotificationModel>>> =
+        callbackFlow {
+            trySend(ResultState.Loading)
+
+
+            database.reference.child(Constants.NOTIFICATION_REF).addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val notifications = snapshot.children.mapNotNull {
+                        it.getValue(NotificationModel::class.java)
+                    }
+                    Log.d("notification", "notification list: "+notifications.toString())
+                    trySend(ResultState.Success(notifications))
+
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    trySend(ResultState.Error(error.message))
+                }
+            })
+
+            awaitClose {
+                close()
+            }
+
+        }
+
+    override suspend fun addNotification(notificationModel: NotificationModel): Flow<ResultState<String>> =
+        callbackFlow {
+            trySend(ResultState.Loading)
+            val notificationId = database.reference.child(Constants.NOTIFICATION_REF).push().key
+            notificationModel.notificationId = notificationId.toString()
+            notificationId?.let { id ->
+                notificationModel.notificationId = id
+                database.reference.child(Constants.NOTIFICATION_REF).child(id).setValue(notificationModel)
+                    .addOnSuccessListener {
+                        Log.d("TAG", "notification: " + notificationModel)
+                        trySend(ResultState.Success(" noti Added"))
+                    }.addOnFailureListener {
+                        trySend(ResultState.Error(it.localizedMessage ?: "Something went wrong"))
+                    }
+                awaitClose() {
+                    close()
+
+                }
+            }
+
+        }
+
+}
+
+

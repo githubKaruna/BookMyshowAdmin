@@ -11,7 +11,7 @@ import com.neatroots.bookymyshowadmin.presentation.Screens.BookingScreen
 import com.neatroots.bookymyshowadmin.presentation.Screens.CategoryScreen
 import com.neatroots.bookymyshowadmin.presentation.Screens.HomeScreen
 import com.neatroots.bookymyshowadmin.presentation.Screens.ManageAdminLoginScreen
-import com.neatroots.bookymyshowadmin.presentation.Screens.ManageNotificationScreen
+import com.neatroots.bookymyshowadmin.presentation.Screens.ManageNotificationsScreen
 import com.neatroots.bookymyshowadmin.presentation.Screens.MovieListScreen
 import com.neatroots.bookymyshowadmin.presentation.Screens.SliderScreen
 import com.neatroots.bookymyshowadmin.presentation.Screens.SplashScreen
@@ -58,7 +58,8 @@ fun App() {
                 ManageAdminLoginScreen(navController = navController)
             }
             composable<Routes.ManageNotificationScreen> {
-                ManageNotificationScreen(navController = navController)
+                ManageNotificationsScreen(navController = navController)
+
             }
             composable<Routes.AllMovies> {
                 MovieListScreen(navController = navController)
